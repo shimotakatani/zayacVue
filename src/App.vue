@@ -1,12 +1,15 @@
 <template>
   <div id="app">
+    <p>Привет</p>
     <img src="./assets/logo.png">
     <HelloWorld :msg="message"/>
+    <Map :map="map"></Map>
   </div>
 </template>
 
 <script>
 import HelloWorld from './components/HelloWorld.vue';
+import Map from './components/Map.vue';
 import axios from 'axios';
 const instance = axios.create({
   baseURL: 'http://localhost:8090',
@@ -18,19 +21,22 @@ export default {
   data: function() {
     return {
       message : '',
-      map: ''
+      map: {}
     }
   },
   created : function() {
-    instance.get('/rest/test')
-    .then((response) => {
-      this.message = response.data.message;
-      this.map = response.data.mapDto;
-    })
-.catch((error) => console.log(error));
-},
+      let _this = this;
+      setInterval(function () {
+          instance.get('/rest/game?chatId=0')
+              .then((response) => {
+                  _this.message = 'Текущее время: ' + response.data.gameDto.innerTime;
+                  _this.map = JSON.parse(JSON.stringify(response.data.mapDto));
+              })
+      }, 2000);
+  },
   components: {
-    HelloWorld
+    HelloWorld,
+      Map
   }
 }
 </script>
