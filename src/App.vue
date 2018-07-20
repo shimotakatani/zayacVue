@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <p>Наблюдаем за зайцем с номером {{chatId}}</p>
+    <input type="text" v-model="chatId">
     <HelloWorld :msg="message"/>
     <Map :map="map" :rabbits="rabbits" :chatId="chatId"></Map>
   </div>

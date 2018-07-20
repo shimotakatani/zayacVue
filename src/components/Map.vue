@@ -8,10 +8,13 @@
                     </div>
                     <div v-if="!isDrawRabbit(cell)">
                         <div v-if="isDrawWhiteCell(cell)">
-                            <div class="cell-background-color__white" style="background-color: red; min-width: 10px; min-height: 10px"></div>
+                            <div class="cell-background-color__red" style="background-color: red; min-width: 10px; min-height: 10px"></div>
                         </div>
                         <div v-if="isDrawGreenCell(cell)">
                             <div class="cell-background-color__green" style="background-color: green; min-width: 10px; min-height: 10px"></div>
+                        </div>
+                        <div v-if="isDrawWallCell(cell)">
+                            <div class="cell-background-color__black" style="background-color: black; min-width: 10px; min-height: 10px"></div>
                         </div>
                     </div>
 
@@ -73,7 +76,10 @@
                 }
             },
             isDrawWhiteCell: function (cell) {
-                return cell.plant == 0;
+                return cell.plant == 0 && cell.ground == 0;
+            },
+            isDrawWallCell: function (cell) {
+                return cell.plant == 0 && cell.ground == 4;
             },
             isDrawGreenCell: function (cell) {
                 return cell.plant == 1;
@@ -91,7 +97,7 @@
 </script>
 
 <style scoped>
-    div.cell-background-color__white {
+    div.cell-background-color__red {
         background-color: red;
         min-width: 10px;
         min-height: 10px
@@ -119,6 +125,11 @@
     }
     div.cell-background-color__yellow {
         background-color: yellow;
+        min-width: 10px;
+        min-height: 10px
+    }
+    div.cell-background-color__black {
+        background-color: black;
         min-width: 10px;
         min-height: 10px
     }
