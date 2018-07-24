@@ -1,23 +1,26 @@
 <template>
     <div class="map">
+        <span>Размер клетки поля: </span><input v-model="cellSize" v-on:change="setRadius(cellSize)">
         <table>
             <tr v-for="row in cells">
                 <td v-for="cell in row">
-                    <div v-if="isDrawRabbit(cell)">
-                        <div class="cell-background-color__yellow" style="background-color: yellow; min-width: 10px; min-height: 10px"></div>
-                    </div>
-                    <div v-if="!isDrawRabbit(cell)">
-                        <div v-if="isDrawWhiteCell(cell)">
-                            <div class="cell-background-color__red" style="background-color: red; min-width: 10px; min-height: 10px"></div>
-                        </div>
-                        <div v-if="isDrawGreenCell(cell)">
-                            <div class="cell-background-color__green" style="background-color: green; min-width: 10px; min-height: 10px"></div>
-                        </div>
-                        <div v-if="isDrawWallCell(cell)">
-                            <div class="cell-background-color__black" style="background-color: black; min-width: 10px; min-height: 10px"></div>
+                    <div v-if="isDrawWhiteCell(cell)">
+                        <div class="cell-background-color__red" v-bind:style="radiusObject" >
+                            <div v-if="isDrawRabbit(cell)">
+                                <img v-bind:style="radiusObject" src="rabbit2.png">
+                            </div>
                         </div>
                     </div>
-
+                    <div v-if="isDrawGreenCell(cell)">
+                        <div class="cell-background-color__green" v-bind:style="radiusObject">
+                            <div v-if="isDrawRabbit(cell)">
+                                <img v-bind:style="radiusObject" src="rabbit2.png">
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="isDrawWallCell(cell)">
+                        <div class="cell-background-color__black" v-bind:style="radiusObject"></div>
+                    </div>
                 </td>
             </tr>
         </table>
@@ -30,7 +33,14 @@
         data: function () {
             return {
                 cells : [[]],
-                rabbits: []
+                rabbits: [],
+                cellSize: 60,
+                radiusObject: {
+                    'min-width': '60px',
+                    'min-height': '60px',
+                    'max-width': '60px',
+                    'max-height': '60px'
+                }
             }
         },
         props: {
@@ -52,9 +62,9 @@
 
                     let currentRabbit = null;
                     rabbits.forEach((item) =>{
-                       if (item.clientId == this.chatId) {
-                           currentRabbit = item;
-                       }
+                        if (item.clientId == this.chatId) {
+                            currentRabbit = item;
+                        }
                     });
 
                     let halfCapacity = Math.floor(capacity / 2);
@@ -72,7 +82,6 @@
                     });
 
                     this.cells = cells;
-                    console.log(this.cells);
                 }
             },
             isDrawWhiteCell: function (cell) {
@@ -87,6 +96,18 @@
             isDrawRabbit: function (cell) {
                 return cell.hasRabbit == true;
             },
+            setRadius: function(cellSize){
+                if (cellSize && +cellSize){
+                    if (cellSize > 4 && cellSize < 100){
+                        this.radiusObject = {
+                            'min-width': cellSize + 'px',
+                            'min-height': cellSize + 'px',
+                            'max-width': cellSize + 'px',
+                            'max-height': cellSize + 'px'
+                        }
+                    }
+                }
+            },
         },
         watch: {
             map: function(val){
@@ -97,40 +118,38 @@
 </script>
 
 <style scoped>
+
+    .radiused {
+        min-width: 60px;
+        min-height: 60px;
+        max-width: 60px;
+        max-height: 60px;
+    }
+
     div.cell-background-color__red {
         background-color: red;
-        min-width: 10px;
-        min-height: 10px
+        background-image: url(../../public/ground1.png);
     }
     table {
-        border: 0;
-        margin: 0;
-        padding: 0;
         border-spacing: 0;
+        align-self: center;
+        margin: auto;
+        border: 0;
+        padding: 0;
     }
-    tr {
+
+    tr, td, img {
         border: 0;
         margin: 0;
         padding: 0;
     }
-    td {
-        border: 0;
-        margin: 0;
-        padding: 0;
-    }
+
     div.cell-background-color__green {
         background-color: green;
-        min-width: 10px;
-        min-height: 10px
-    }
-    div.cell-background-color__yellow {
-        background-color: yellow;
-        min-width: 10px;
-        min-height: 10px
+        background-image: url(../../public/grass2.png);
     }
     div.cell-background-color__black {
         background-color: black;
-        min-width: 10px;
-        min-height: 10px
+        background-image: url(../../public/wall1.png);
     }
 </style>
