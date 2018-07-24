@@ -1,10 +1,18 @@
 <template>
   <div id="app" align="center">
-    <span>Наблюдаем за зайцем с номером </span>
-    <input class="rabbitId" type="text" v-model="chatId">
-    <user-list></user-list>
-    <HelloWorld :msg="message"/>
-    <Map :map="map" :rabbits="rabbits" :chatId="chatId"></Map>
+    <table width="100%">
+      <tr>
+        <td valign="top" style="max-width: 500px">
+          <span>Наблюдаем за зайцем с номером </span>
+          <input class="rabbitId" type="text" v-model="chatId">
+          <user-list></user-list>
+          <HelloWorld :msg="message"/>
+        </td>
+        <td valign="top">
+          <Map :map="map" :rabbits="rabbits" :chatId="chatId"></Map>
+        </td>
+      </tr>
+    </table>
   </div>
 </template>
 
