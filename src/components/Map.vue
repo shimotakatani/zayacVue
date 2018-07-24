@@ -75,7 +75,7 @@
                         if (item.clientId != this.chatId) {
                             if ((item.x >= (currentRabbit.x - halfCapacity)) && (item.x <= (currentRabbit.x + halfCapacity))) {
                                 if ((item.y >= (currentRabbit.y - halfCapacity)) && (item.y <= (currentRabbit.y + halfCapacity))) {
-                                    cells[currentRabbit.x + halfCapacity - item.x][currentRabbit.y + halfCapacity - item.y].hasRabbit = true;
+                                    cells[item.x + halfCapacity - currentRabbit.x][item.y + halfCapacity - currentRabbit.y].hasRabbit = true;
                                 }
                             }
                         }
