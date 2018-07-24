@@ -14,7 +14,7 @@
     import axios from 'axios';
     import UserList from "./components/UserList";
     const instance = axios.create({
-        baseURL: 'http://localhost:8090',
+        baseURL: 'http://5.140.165.65:8090',
         timeout: 1000
     });
 

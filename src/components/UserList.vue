@@ -47,7 +47,7 @@
             }
         },
         created() {
-            axios.get(`http://localhost:8090/rest/rabbit/list`)
+            axios.get(`http://5.140.165.65:8090/rest/rabbit/list`)
                 .then(response => {
                     // JSON responses are automatically parsed.
                     this.posts = response.data
@@ -59,7 +59,7 @@
         },
         methods: {
             getScore: function () {
-                axios.get(`http://localhost:8090/rest/rabbit/list`)
+                axios.get(`http://5.140.165.65:8090/rest/rabbit/list`)
                     .then(response => {
                         // JSON responses are automatically parsed.
                         this.posts = response.data
