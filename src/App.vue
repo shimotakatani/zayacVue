@@ -2,6 +2,7 @@
   <div id="app" align="center">
     <span>Наблюдаем за зайцем с номером </span>
     <input class="rabbitId" type="text" v-model="chatId">
+    <user-list></user-list>
     <HelloWorld :msg="message"/>
     <Map :map="map" :rabbits="rabbits" :chatId="chatId"></Map>
   </div>
@@ -11,6 +12,7 @@
     import HelloWorld from './components/HelloWorld.vue';
     import Map from './components/Map.vue';
     import axios from 'axios';
+    import UserList from "./components/UserList";
     const instance = axios.create({
         baseURL: 'http://localhost:8090',
         timeout: 1000
@@ -38,6 +40,7 @@
             }, 1000);
         },
         components: {
+            UserList,
             HelloWorld,
             Map
         }
