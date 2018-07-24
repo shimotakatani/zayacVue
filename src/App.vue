@@ -1,5 +1,7 @@
 <template>
-  <div id="app">
+  <div id="app" align="center">
+    <span>Наблюдаем за зайцем с номером </span>
+    <input class="rabbitId" type="text" v-model="chatId">
     <HelloWorld :msg="message"/>
     <Map :map="map" :rabbits="rabbits" :chatId="chatId"></Map>
   </div>
@@ -49,6 +51,16 @@
     -moz-osx-font-smoothing: grayscale;
     text-align: center;
     color: #2c3e50;
-    margin-top: 60px;
+    margin-top: 20px;
   }
+
+  .rabbitId {
+    margin-right: 10px;
+    margin-left: 10px;
+    max-width: 100px;
+    min-width: 30px;
+    font-size: 18px;
+    text-align: center
+  }
+
 </style>
