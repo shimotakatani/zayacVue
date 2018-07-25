@@ -21,12 +21,14 @@
     import Map from './components/Map.vue';
     import axios from 'axios';
     import UserList from "./components/UserList";
-    import config from "./config";
+    import * as config from "./config";
+
+    console.log(JSON.stringify(config));
 
     let instance;
-    if (config) {
+    if (config && config.config && config.config.serverHost) {
         instance  = axios.create({
-            baseURL: 'http://' + config.serverHost + ':8090',
+            baseURL: 'http://' + config.config.serverHost + ':8090',
             timeout: 1000
         });
     } else {
@@ -44,7 +46,7 @@
                 map: {},
                 rabbits: [],
                 chatId: 0,
-                serverHost: config && config.serverHost ? config.serverHost : 'localhost'
+                serverHost: config && config.config && config.config.serverHost ? config.config.serverHost : 'localhost'
             }
         },
         created : function() {
