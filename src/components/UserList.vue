@@ -27,7 +27,7 @@
 
         <ul v-if="errors && errors.length">
             <li v-for="error in errors">
-                {{error.message.replace('\n', '<br>')}}
+                {{error.message.replace("\n", "&lt;br&gt;")}}
             </li>
         </ul>
     </div>
@@ -46,8 +46,11 @@
                 timer: ''
             }
         },
+        props: {
+            serverHost : 'localhost'
+        },
         created() {
-            axios.get(`http://5.140.165.65:8090/rest/rabbit/list`)
+            axios.get(`http://` + this.serverHost + `:8090/rest/rabbit/list`)
                 .then(response => {
                     // JSON responses are automatically parsed.
                     this.posts = response.data
@@ -59,7 +62,7 @@
         },
         methods: {
             getScore: function () {
-                axios.get(`http://5.140.165.65:8090/rest/rabbit/list`)
+                axios.get(`http://` + this.serverHost + `:8090/rest/rabbit/list`)
                     .then(response => {
                         // JSON responses are automatically parsed.
                         this.posts = response.data

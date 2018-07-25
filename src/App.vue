@@ -5,7 +5,7 @@
         <td valign="top" style="max-width: 500px">
           <span>Наблюдаем за зайцем с номером </span>
           <input class="rabbitId" type="text" v-model="chatId">
-          <user-list></user-list>
+          <user-list :serverHost="serverHost"></user-list>
           <HelloWorld :msg="message"/>
         </td>
         <td valign="top">
@@ -21,10 +21,20 @@
     import Map from './components/Map.vue';
     import axios from 'axios';
     import UserList from "./components/UserList";
-    const instance = axios.create({
-        baseURL: 'http://5.140.165.65:8090',
-        timeout: 1000
-    });
+    import config from "./config";
+
+    let instance;
+    if (config) {
+        instance  = axios.create({
+            baseURL: 'http://' + config.serverHost + ':8090',
+            timeout: 1000
+        });
+    } else {
+        instance  = axios.create({
+            baseURL: 'http://localhost:8090',
+            timeout: 1000
+        });
+    }
 
     export default {
         name: 'app',
@@ -33,7 +43,8 @@
                 message : '',
                 map: {},
                 rabbits: [],
-                chatId: 0
+                chatId: 0,
+                serverHost: config && config.serverHost ? config.serverHost : 'localhost'
             }
         },
         created : function() {
