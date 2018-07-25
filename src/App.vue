@@ -23,8 +23,6 @@
     import UserList from "./components/UserList";
     import * as config from "./config";
 
-    console.log(JSON.stringify(config));
-
     let instance;
     if (config && config.config && config.config.serverHost) {
         instance  = axios.create({
