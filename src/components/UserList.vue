@@ -4,15 +4,17 @@
             <table align="center">
                 <tr>
                     <th>Место</th>
-                    <th>Номер зайца</th>
+                    <th>#</th>
                     <th>Заяц</th>
-                    <th>Счёт</th>
+                    <th>x</th>
+                    <th>y</th>
                 </tr>
                 <tr v-for="(post, index) in orderedUsers">
                     <td>{{index + 1}}</td>
                     <td>{{post.clientId}}</td>
                     <td>{{decodeURIComponent(post.name)}}</td>
-                    <td>{{post.eatedGrass}}</td>
+                    <td>{{post.x}}</td>
+                    <td>{{post.y}}</td>
                 </tr>
             </table>
 
