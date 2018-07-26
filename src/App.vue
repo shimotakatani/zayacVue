@@ -7,6 +7,14 @@
           <input class="rabbitId" type="text" v-model="chatId">
           <user-list :serverHost="serverHost"></user-list>
           <HelloWorld :msg="message"/>
+          <div v-if="currentRabbit.tacticId == 1">
+            <p>У вашего зайца тактика поиска в ширину</p>
+          </div>
+          <div v-if="currentRabbit.tacticId == 0">
+            <p>У вашего зайца нет тактики, если видит в соседней клетке траву - то ест</p>
+          </div>
+          <input type="checkbox" v-model="checkTactic1"/>
+          <button v-on:click="sendTactic()">Сменить тактику</button>
         </td>
         <td valign="top">
           <Map :map="map" :rabbits="rabbits" :chatId="chatId"></Map>
@@ -43,6 +51,8 @@
                 message : '',
                 map: {},
                 rabbits: [],
+                currentRabbit: {},
+                checkTactic1: false,
                 chatId: 0,
                 serverHost: config && config.config && config.config.serverHost ? config.config.serverHost : 'localhost'
             }
@@ -55,8 +65,27 @@
                         _this.message = 'Текущее время: ' + response.data.gameDto.innerTime;
                         _this.map = JSON.parse(JSON.stringify(response.data.mapDto));
                         _this.rabbits = JSON.parse(JSON.stringify(response.data.rabbitDtoList));
+                        _this.currentRabbit = _this.rabbits.filter((item) => {return item.clientId == _this.chatId})[0];
+                        _this.checkTactic1 = _this.currentRabbit ? _this.currentRabbit.tacticId == 1 : false;
                     })
             }, 1000);
+        },
+        watch: {
+            chatId: function(val){
+                console.log(val);
+                this.currentRabbit = this.rabbits.filter((item) => {return item.clientId == val})[0];
+                this.checkTactic1 = this.currentRabbit ? this.currentRabbit.tacticId == 1 : false;
+                console.log(this.currentRabbit);
+            }
+        },
+        methods: {
+            sendTactic: function () {
+                let _this = this;
+                instance.get(`/rest/setTactic?chatId=${_this.chatId}&tacticId=${_this.checkTactic1 ? 1 : 0}`)
+                    .then((response) => {
+                        console.log("тактика сменена" + JSON.stringify(response));
+                    });
+            }
         },
         components: {
             UserList,

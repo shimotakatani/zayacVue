@@ -79,6 +79,7 @@
                                 }
                             }
                         }
+                        //cells[item.x][item.y].hasRabbit = true;
                     });
 
                     this.cells = cells;
