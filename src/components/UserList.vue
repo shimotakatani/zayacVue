@@ -8,6 +8,7 @@
                     <th>Заяц</th>
                     <th>x</th>
                     <th>y</th>
+                    <th>Счёт</th>
                 </tr>
                 <tr v-for="(post, index) in orderedUsers">
                     <td>{{index + 1}}</td>
@@ -15,6 +16,7 @@
                     <td>{{decodeURIComponent(post.name)}}</td>
                     <td>{{post.x}}</td>
                     <td>{{post.y}}</td>
+                    <td>{{post.eatedGrass}}</td>
                 </tr>
             </table>
 
