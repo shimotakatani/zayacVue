@@ -65,7 +65,7 @@
             setLogin: function(value){
                 this.login = value;
             },
-            setPassword: function (){
+            setPassword: function (value){
                 this.password = value;
             }
         },
