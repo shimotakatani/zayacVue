@@ -9,6 +9,7 @@
                     <th>x</th>
                     <th>y</th>
                     <th>Счёт</th>
+                    <th>Действие</th>
                 </tr>
                 <tr v-for="(post, index) in orderedUsers">
                     <td>{{index + 1}}</td>
@@ -17,6 +18,7 @@
                     <td>{{post.x}}</td>
                     <td>{{post.y}}</td>
                     <td>{{post.eatedGrass}}</td>
+                    <td>{{post.currentAction}}</td>
                 </tr>
             </table>
 

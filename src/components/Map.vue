@@ -7,7 +7,7 @@
                     <div v-if="isDrawWhiteCell(cell)">
                         <div class="cell-background-color__red" v-bind:style="radiusObject" >
                             <div v-if="isDrawRabbit(cell)">
-                                <img v-bind:style="radiusObject" src="rabbit2.png">
+                                <img v-bind:style="radiusObject" v-bind:src="getRabbitImageByAction(cell)">
                             </div>
                         </div>
                     </div>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+    //rabbit2.png
     export default {
         name: 'Map',
         data: function () {
@@ -70,12 +71,14 @@
                     let halfCapacity = Math.floor(capacity / 2);
 
                     cells[halfCapacity][halfCapacity].hasRabbit = true;
+                    cells[halfCapacity][halfCapacity].rabbitAction = currentRabbit.currentAction;
 
                     rabbits.forEach((item) =>{
                         if (item.clientId != this.chatId) {
                             if ((item.x >= (currentRabbit.x - halfCapacity)) && (item.x <= (currentRabbit.x + halfCapacity))) {
                                 if ((item.y >= (currentRabbit.y - halfCapacity)) && (item.y <= (currentRabbit.y + halfCapacity))) {
                                     cells[item.x + halfCapacity - currentRabbit.x][item.y + halfCapacity - currentRabbit.y].hasRabbit = true;
+                                    cells[item.x + halfCapacity - currentRabbit.x][item.y + halfCapacity - currentRabbit.y].rabbitAction = item.currentAction;
                                 }
                             }
                         }
@@ -96,6 +99,12 @@
             },
             isDrawRabbit: function (cell) {
                 return cell.hasRabbit == true;
+            },
+            getRabbitImageByAction: function (cell) {
+                if (cell.rabbitAction == 1) return "rabbit4.png";
+                if (cell.rabbitAction == 2) return "rabbit3.png";
+                if (cell.rabbitAction == 3) return "rabbit5.png";
+                return "rabbit2.png";
             },
             setRadius: function(cellSize){
                 if (cellSize && +cellSize){
