@@ -14,7 +14,7 @@
                     <div v-if="isDrawGreenCell(cell)">
                         <div class="cell-background-color__green" v-bind:style="radiusObject">
                             <div v-if="isDrawRabbit(cell)">
-                                <img v-bind:style="radiusObject" src="rabbit2.png">
+                                <img v-bind:style="radiusObject" v-bind:src="getRabbitImageByAction(cell)">
                             </div>
                         </div>
                     </div>
