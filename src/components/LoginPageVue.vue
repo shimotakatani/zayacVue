@@ -10,6 +10,7 @@
             <span>Пароль: <input type="password" class="password" title="пароль" v-model="password"></span>
         </div>
         <button @click="emitLogin">Войти</button>
+        <button @click="emitTestToken">Войти без авторизации</button>
     </div>
 </template>
 
@@ -28,6 +29,9 @@
                 this.$emit("setLogin", this.login);
                 this.$emit("setPassword", this.password);
                 this.$emit("getToken");
+            },
+            emitTestToken: function () {
+                this.$emit("setToken", "testToken");
             }
         }
     }

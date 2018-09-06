@@ -1,7 +1,11 @@
 <template>
   <div id="app" align="center">
     <div v-if="userToken.length == 0">
-      <login-page v-on:setLogin = "setLogin" v-on:setPassword = "setPassword" v-on:getToken = "getToken"></login-page>
+      <login-page v-on:setLogin = "setLogin" v-on:setPassword = "setPassword" v-on:getToken = "getToken" v-on:setToken = "setToken"></login-page>
+      <div v-if="message && message.length">
+        <span>{{message}}</span>
+        <button class="errorMessage" data-tooltip="Удалить" @click="message = ''">х</button>
+      </div>
     </div>
     <div v-if="userToken.length > 0">
       <game :userToken="userToken"></game>
@@ -57,8 +61,9 @@
                     .then((response) => {
                         if (response && response.data && response.data.token){
                             _this.userToken = response.data.token;
+                            _this.message = '';
                         } else {
-                            console.log('Проблема. Такой ответ: ' + JSON.stringify(response.data));
+                            _this.message = 'Проблема. Неверный пользователь или пароль.';
                         }
                     });
             },
@@ -67,6 +72,9 @@
             },
             setPassword: function (value){
                 this.password = value;
+            },
+            setToken: function (value){
+                this.userToken = value;
             }
         },
         components: {

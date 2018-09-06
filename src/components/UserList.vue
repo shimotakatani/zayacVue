@@ -26,14 +26,21 @@
             {{scores.message}}
         </div>
 
-        <button @click="getScore()">Включть обновление</button>
-        <button @click="cancelAutoUpdate()">Отменить обновление</button>
+        <button class="beaty" @click="getScore()">Включть обновление</button>
+        <button class="beaty" @click="cancelAutoUpdate()">Отменить обновление</button>
 
-        <ul v-if="errors && errors.length">
-            <li v-for="error in errors">
-                {{error.message.replace("\n", "&lt;br&gt;")}}
-            </li>
-        </ul>
+        <div v-if="errors && errors.length">
+            <div class="scrollable">
+                <ul>
+                    <li v-for="error in errors">
+                        {{error.message.replace("\n", "&lt;br&gt;")}}
+                    </li>
+                </ul>
+            </div>
+
+            <button @click="errors = []">Удалить сообщения об ошибках</button>
+        </div>
+
     </div>
 </template>
 
@@ -138,7 +145,7 @@
         border-right: none;
     }
 
-    button {
+    button.beaty {
         display: inline-block;
         color: black;
         font-size: 125%;
@@ -153,12 +160,17 @@
         box-shadow: inset 0 -2px 1px rgba(0,0,0,0), inset 0 1px 2px rgba(0,0,0,0), inset 0 0 0 60px rgba(255,255,0,0);
         transition: box-shadow .2s, border-color .2s;
     }
-    button:hover {
+    button.beaty:hover {
         box-shadow: inset 0 -1px 1px rgba(0,0,0,0), inset 0 1px 2px rgba(0,0,0,0), inset 0 0 0 60px rgba(255,255,0,.5);
     }
-    button:active {
+    button.beaty:active {
         padding: calc(.25em + 1px) .5em calc(.25em - 1px);
         border-color: rgba(177,159,0,1);
         box-shadow: inset 0 -1px 1px rgba(0,0,0,.1), inset 0 1px 2px rgba(0,0,0,.3), inset 0 0 0 60px rgba(255,255,0,.45);
+    }
+    .scrollable {
+        height: 200px; /* высота нашего блока */
+        border: 1px solid #C1C1C1; /* размер и цвет границы блока */
+        overflow-y: scroll; /* прокрутка по вертикали */
     }
 </style>
