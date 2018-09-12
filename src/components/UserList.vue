@@ -18,7 +18,7 @@
                     <td>{{post.x}}</td>
                     <td>{{post.y}}</td>
                     <td>{{post.fat}}</td>
-                    <td>{{post.currentAction}}</td>
+                    <td>{{getActionNameById(post.currentAction)}}</td>
                 </tr>
             </table>
 
@@ -89,6 +89,18 @@
             cancelAutoUpdate: function() {
                 window.clearInterval(this.timer);
                 this.timer = '';
+            },
+            getActionNameById: function (id) {
+                let actionName = '';
+                switch (id){
+                    case 0 : actionName = 'Непонятно'; break;
+                    case 1 : actionName = 'Ест'; break;
+                    case 2 : actionName = 'Идёт'; break;
+                    case 3 : actionName = 'Спит'; break;
+                    case 4 : actionName = 'Отдыхает'; break;
+                    default: actionName = 'Непонятно';
+                }
+                return actionName;
             }
         },
         computed: {
