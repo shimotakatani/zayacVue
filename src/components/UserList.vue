@@ -9,15 +9,17 @@
                     <th>x</th>
                     <th>y</th>
                     <th>Жирок</th>
+                    <th>Сон(%)</th>
                     <th>Действие</th>
                 </tr>
                 <tr v-for="(post, index) in orderedUsers">
                     <td>{{index + 1}}</td>
-                    <td>{{post.clientId}}</td>
+                    <td @click="setChatId(post.clientId)">{{post.clientId}}</td>
                     <td>{{decodeURIComponent(post.name)}}</td>
                     <td>{{post.x}}</td>
                     <td>{{post.y}}</td>
                     <td>{{post.fat}}</td>
+                    <td>{{post.needSleep}}</td>
                     <td>{{getActionNameById(post.currentAction)}}</td>
                 </tr>
             </table>
@@ -101,6 +103,9 @@
                     default: actionName = 'Непонятно';
                 }
                 return actionName;
+            },
+            setChatId: function (id) {
+                this.$emit("setChatId", id);
             }
         },
         computed: {
@@ -128,7 +133,7 @@
         background: #BCEBDD;
         color: white;
         text-shadow: 0 1px 1px #2D2020;
-        padding: 10px 20px;
+        padding: 4px 6px;
     }
     th, td {
         border-style: solid;
@@ -146,7 +151,7 @@
         border-right: none;
     }
     td {
-        padding: 10px 20px;
+        padding: 4px 6px;
         background: #F8E391;
     }
     tr:last-child td:first-child {
