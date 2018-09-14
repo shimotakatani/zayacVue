@@ -5,7 +5,7 @@
                 <td valign="top" style="max-width: 500px">
                     <span>Наблюдаем за зайцем с номером </span>
                     <input class="rabbitId" type="text" v-model="chatId">
-                    <user-list :serverHost="serverHost"></user-list>
+                    <user-list :serverHost="serverHost" v-on:setChatId="setChatId"></user-list>
                     <HelloWorld :msg="message"></HelloWorld>
                     <div v-if="currentRabbit.tacticId == 1">
                         <p>У вашего зайца тактика поиска в ширину</p>
@@ -89,6 +89,9 @@
                     .then((response) => {
                         console.log("тактика сменена" + JSON.stringify(response));
                     });
+            },
+            setChatId: function (id) {
+                this.chatId = id;
             }
         },
         components: {
