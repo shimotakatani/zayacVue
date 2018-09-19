@@ -15,12 +15,14 @@
             fillMap: function (msg, capacity) {
                 let canvas = document.getElementById("littleMap"),
                     ctx     = canvas.getContext('2d');
+                ctx.canvas.height = 200;
+                ctx.canvas.width = 200;
 
                 if (msg && msg.length && capacity){
                     for(let i = 0; i < capacity; i++){
                         for(let j = 0; j < capacity; j++){
                             ctx.fillStyle = this.getColorByCode(msg[ i * capacity + j]); // меняем цвет клеток
-                            ctx.fillRect(i, j, 2, 1);
+                            ctx.fillRect(i, j, 1, 1);
                         }
                     }
                 }
@@ -47,6 +49,6 @@
 <style scoped>
     canvas {
         width: 600px;
-        height: 400px;
+        height: 600px;
     }
 </style>
