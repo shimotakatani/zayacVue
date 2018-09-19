@@ -15,6 +15,7 @@
                     </div>
                     <input type="checkbox" disabled hidden v-model="checkTactic1"/>
                     <button v-on:click="sendTactic()">Сменить тактику</button>
+                    <little-map :msg="littleMap" :capacity="capacity"></little-map>
                 </td>
                 <td valign="top">
                     <Map :map="map" :rabbits="rabbits" :chatId="chatId"></Map>
@@ -31,6 +32,7 @@
     import UserList from "./UserList";
     import * as config from "../config";
     import LoginPage from "./LoginPageVue";
+    import LittleMap from "./LittleMap";
 
     let instance;
     if (config && config.config && config.config.serverHost) {
@@ -55,7 +57,10 @@
                 currentRabbit: {},
                 checkTactic1: false,
                 chatId: 0,
-                serverHost: config && config.config && config.config.serverHost ? config.config.serverHost : 'localhost'
+                serverHost: config && config.config && config.config.serverHost ? config.config.serverHost : 'localhost',
+                littleMap: '',
+                mapCadrs: [],
+                capacity: 0
             }
         },
         props: {
@@ -72,6 +77,19 @@
                         _this.currentRabbit = _this.rabbits.filter((item) => {return item.clientId == _this.chatId})[0];
                         _this.checkTactic1 = _this.currentRabbit ? _this.currentRabbit.tacticId == 1 : false;
                     })
+            }, 1000);
+            setInterval(function () {
+                for (let i = 0; i < 10; i ++){
+                    instance.get('/rest/littleMap?chatId=' + _this.chatId + "&cadr=" + i)
+                        .then((response) => {
+                            _this.capacity = response.data.capacity;
+                            _this.mapCadrs[response.data.number] = response.data.mapString;
+                            if (!!response.data.finalCadr){
+                                _this.littleMap = _this.concatMap(_this.mapCadrs);
+                            }
+                        })
+                }
+
             }, 1000);
         },
         watch: {
@@ -92,9 +110,13 @@
             },
             setChatId: function (id) {
                 this.chatId = id;
+            },
+            concatMap: function (mapCadrs) {
+                return mapCadrs.join();
             }
         },
         components: {
+            LittleMap,
             LoginPage,
             UserList,
             HelloWorld,
