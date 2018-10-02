@@ -16,6 +16,8 @@
 <script>
     import axios from 'axios';
     import * as config from "./config";
+    import SockJS from 'sockjs-client';
+    import Stomp from 'stompjs';
     import LoginPage from "./components/LoginPageVue";
     import Game from "./components/GameComponent.vue";
 
@@ -45,10 +47,23 @@
                 serverHost: config && config.config && config.config.serverHost ? config.config.serverHost : 'localhost',
                 userToken: '',
                 login: '',
-                password: ''
+                password: '',
+                socket: {},
+                stompClient: {}
             }
         },
         created : function() {
+            let _this = this;
+            this.socket = new SockJS("http://localhost:8090/gs-guide-websocket");
+            this.stompClient = Stomp.over(this.socket);
+            this.stompClient.connect({}, function (frame) {
+                //setConnected(true);
+                console.log('Connected: ' + frame);
+                _this.stompClient.subscribe('/topic/greetings', function (greeting) {
+                    console.log('Receive: ' + greeting.body);
+                   // _this.showGreeting(JSON.parse(greeting.body).content);
+                });
+            });
 
         },
         watch: {
@@ -62,6 +77,7 @@
                         if (response && response.data && response.data.token){
                             _this.userToken = response.data.token;
                             _this.message = '';
+                            _this.stompClient.send("/app/hello", {}, JSON.stringify({content:response.data.token}));
                         } else {
                             _this.message = 'Проблема. Неверный пользователь или пароль.';
                         }
