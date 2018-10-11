@@ -6,6 +6,9 @@
         <span>{{message}}</span>
         <button class="errorMessage" data-tooltip="Удалить" @click="message = ''">х</button>
       </div>
+      <span>socketClientId: <input type="text" class="username" title="socketClientId" v-model="socketClientId"></span>
+      <button data-tooltip="Отправить" @click="sendSocket">Отправить</button>
+      <button data-tooltip="Отправить" @click="resubscribe">Переподписаться</button>
     </div>
     <div v-if="userToken.length > 0">
       <game :userToken="userToken"></game>
@@ -49,7 +52,9 @@
                 login: '',
                 password: '',
                 socket: {},
-                stompClient: {}
+                stompClient: {},
+                socketClientId: 0,
+                stompSubscribe: {}
             }
         },
         created : function() {
@@ -59,10 +64,7 @@
             this.stompClient.connect({}, function (frame) {
                 //setConnected(true);
                 console.log('Connected: ' + frame);
-                _this.stompClient.subscribe('/topic/greetings', function (greeting) {
-                    console.log('Receive: ' + greeting.body);
-                   // _this.showGreeting(JSON.parse(greeting.body).content);
-                });
+                _this.stompSubscribe = _this.stompClient.subscribe('/topic/' + _this.socketClientId, _this.receiveMessage);
             });
 
         },
@@ -77,7 +79,7 @@
                         if (response && response.data && response.data.token){
                             _this.userToken = response.data.token;
                             _this.message = '';
-                            _this.stompClient.send("/app/hello", {}, JSON.stringify({content:response.data.token}));
+                            _this.stompClient.send("/app/" + _this.socketClientId, {}, JSON.stringify({content:response.data.token}));
                         } else {
                             _this.message = 'Проблема. Неверный пользователь или пароль.';
                         }
@@ -91,6 +93,17 @@
             },
             setToken: function (value){
                 this.userToken = value;
+            },
+            sendSocket: function () {
+                this.stompClient.send("/app/" + this.socketClientId, {}, JSON.stringify({chatId: 0}));
+            },
+            resubscribe: function () {
+                this.stompSubscribe.unsubscribe();
+                this.stompSubscribe = this.stompClient.subscribe('/topic/' + this.socketClientId, this.receiveMessage);
+            },
+            receiveMessage: function (greeting) {
+                console.log('Receive: ' + greeting.body);
+                // _this.showGreeting(JSON.parse(greeting.body).content);
             }
         },
         components: {
