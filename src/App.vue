@@ -1,17 +1,26 @@
 <template>
   <div id="app" align="center">
+    <div>
+      <div>Параметры подключения</div>
+      <div v-if="getConnected()">
+        <span>socketClientId: <input type="text" class="username" title="socketClientId" v-model="socketClientId"></span>
+        <button data-tooltip="Отправить" @click="sendSocket">Отправить</button>
+        <button data-tooltip="Переподписаться" @click="resubscribe">Переподписаться</button>
+        <button data-tooltip="Отключиться" @click="disconnectSocket">Отключиться</button>
+      </div>
+      <div v-if="!getConnected()">
+        <button data-tooltip="Подключиться" @click="connectSocket">Подключиться</button>
+      </div>
+    </div>
     <div v-if="userToken.length == 0">
       <login-page v-on:setLogin = "setLogin" v-on:setPassword = "setPassword" v-on:getToken = "getToken" v-on:setToken = "setToken"></login-page>
       <div v-if="message && message.length">
         <span>{{message}}</span>
         <button class="errorMessage" data-tooltip="Удалить" @click="message = ''">х</button>
       </div>
-      <span>socketClientId: <input type="text" class="username" title="socketClientId" v-model="socketClientId"></span>
-      <button data-tooltip="Отправить" @click="sendSocket">Отправить</button>
-      <button data-tooltip="Отправить" @click="resubscribe">Переподписаться</button>
     </div>
     <div v-if="userToken.length > 0">
-      <game :userToken="userToken"></game>
+      <game :userToken="userToken" v-on:setSocketId="setSocketId"></game>
     </div>
   </div>
 </template>
@@ -104,6 +113,32 @@
             receiveMessage: function (greeting) {
                 console.log('Receive: ' + greeting.body);
                 // _this.showGreeting(JSON.parse(greeting.body).content);
+            },
+            getConnected: function () {
+                return this.stompClient.connected;
+            },
+            connectSocket: function () {
+                let _this = this;
+                this.socket = new SockJS("http://localhost:8090/gs-guide-websocket");
+                this.stompClient = Stomp.over(this.socket);
+                this.stompClient.connect({}, function (frame) {
+                    //setConnected(true);
+                    console.log('Connected: ' + frame);
+                    _this.stompSubscribe = _this.stompClient.subscribe('/topic/' + _this.socketClientId, _this.receiveMessage);
+                });
+            },
+            disconnectSocket: function () {
+                let _this = this;
+                if (this.stompSubscribe && this.stompSubscribe.unsubscribe) this.stompSubscribe.unsubscribe();
+                this.stompClient.disconnect(function () {
+                    console.log('Disconnected: ');
+                    _this.stompSubscribe = {};
+                });
+                this.socket.close(1000, "User disconnect");
+            },
+            setSocketId: function (id) {
+                this.socketClientId = id;
+                this.resubscribe();
             }
         },
         components: {

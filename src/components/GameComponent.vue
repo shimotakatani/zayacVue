@@ -110,6 +110,7 @@
             },
             setChatId: function (id) {
                 this.chatId = id;
+                this.$emit("setSocketId", id);
             },
             concatMap: function (mapCadrs) {
                 return mapCadrs.join();
