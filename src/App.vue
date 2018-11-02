@@ -20,7 +20,12 @@
       </div>
     </div>
     <div v-if="userToken.length > 0">
-      <game :userToken="userToken" v-on:setSocketId="setSocketId"></game>
+      <game
+              :userToken="userToken"
+              :gameData="gameData"
+              :posts="posts"
+              v-on:setSocketId="setSocketId"
+      ></game>
     </div>
   </div>
 </template>
@@ -63,7 +68,9 @@
                 socket: {},
                 stompClient: {},
                 socketClientId: 0,
-                stompSubscribe: {}
+                stompSubscribe: {},
+                gameData: {},
+                posts: []
             }
         },
         created : function() {
@@ -71,9 +78,8 @@
             this.socket = new SockJS("http://localhost:8090/gs-guide-websocket");
             this.stompClient = Stomp.over(this.socket);
             this.stompClient.connect({}, function (frame) {
-                //setConnected(true);
-                console.log('Connected: ' + frame);
                 _this.stompSubscribe = _this.stompClient.subscribe('/topic/' + _this.socketClientId, _this.receiveMessage);
+                _this.postsSubscribe = _this.stompClient.subscribe('/topic/posts', _this.receivePosts);
             });
 
         },
@@ -111,8 +117,10 @@
                 this.stompSubscribe = this.stompClient.subscribe('/topic/' + this.socketClientId, this.receiveMessage);
             },
             receiveMessage: function (greeting) {
-                console.log('Receive: ' + greeting.body);
-                // _this.showGreeting(JSON.parse(greeting.body).content);
+                this.gameData = JSON.parse(greeting.body);
+            },
+            receivePosts: function (greeting) {
+                this.posts = JSON.parse(greeting.body);
             },
             getConnected: function () {
                 return this.stompClient.connected;
@@ -122,17 +130,19 @@
                 this.socket = new SockJS("http://localhost:8090/gs-guide-websocket");
                 this.stompClient = Stomp.over(this.socket);
                 this.stompClient.connect({}, function (frame) {
-                    //setConnected(true);
                     console.log('Connected: ' + frame);
                     _this.stompSubscribe = _this.stompClient.subscribe('/topic/' + _this.socketClientId, _this.receiveMessage);
+                    _this.postsSubscribe = _this.stompClient.subscribe('/topic/posts', _this.receivePosts);
                 });
             },
             disconnectSocket: function () {
                 let _this = this;
                 if (this.stompSubscribe && this.stompSubscribe.unsubscribe) this.stompSubscribe.unsubscribe();
+                if (this.postsSubscribe && this.postsSubscribe.unsubscribe) this.postsSubscribe.unsubscribe();
                 this.stompClient.disconnect(function () {
                     console.log('Disconnected: ');
                     _this.stompSubscribe = {};
+                    _this.postsSubscribe = {};
                 });
                 this.socket.close(1000, "User disconnect");
             },

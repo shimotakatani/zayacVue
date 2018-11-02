@@ -55,25 +55,25 @@
         name: 'UserList',
         data () {
             return {
-                posts: [],
                 errors: [],
                 scores : {},
                 timer: ''
             }
         },
         props: {
-            serverHost : 'localhost'
+            serverHost : 'localhost',
+            posts: []
         },
         created() {
-            axios.get(`http://` + this.serverHost + `:8090/rest/rabbit/list`)
-                .then(response => {
-                    // JSON responses are automatically parsed.
-                    this.posts = response.data
-                })
-                .catch(e => {
-                    this.errors.push(e)
-                });
-            this.timer = setInterval(this.getScore, 1000);
+//            axios.get(`http://` + this.serverHost + `:8090/rest/rabbit/list`)
+//                .then(response => {
+//                    // JSON responses are automatically parsed.
+//                    this.posts = response.data
+//                })
+//                .catch(e => {
+//                    this.errors.push(e)
+//                });
+//            this.timer = setInterval(this.getScore, 1000);
         },
         methods: {
             getScore: function () {

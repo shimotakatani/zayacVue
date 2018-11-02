@@ -5,7 +5,11 @@
                 <td valign="top" style="max-width: 500px">
                     <span>Наблюдаем за зайцем с номером </span>
                     <input class="rabbitId" type="text" v-model="chatId">
-                    <user-list :serverHost="serverHost" v-on:setChatId="setChatId"></user-list>
+                    <user-list
+                            :serverHost="serverHost"
+                            :posts="posts"
+                            v-on:setChatId="setChatId"
+                    ></user-list>
                     <HelloWorld :msg="message"></HelloWorld>
                     <div v-if="currentRabbit.tacticId == 1">
                         <p>У вашего зайца тактика поиска в ширину</p>
@@ -64,20 +68,22 @@
             }
         },
         props: {
-            userToken: ''
+            userToken: '',
+            gameData: {},
+            posts: []
         },
         created : function() {
             let _this = this;
-            setInterval(function () {
-                instance.get('/rest/game?chatId=' + _this.chatId)
-                    .then((response) => {
-                        _this.message = 'Текущее время: ' + response.data.gameDto.innerTime;
-                        _this.map = JSON.parse(JSON.stringify(response.data.mapDto));
-                        _this.rabbits = JSON.parse(JSON.stringify(response.data.rabbitDtoList));
-                        _this.currentRabbit = _this.rabbits.filter((item) => {return item.clientId == _this.chatId})[0];
-                        _this.checkTactic1 = _this.currentRabbit ? _this.currentRabbit.tacticId == 1 : false;
-                    })
-            }, 1000);
+//            setInterval(function () {
+//                instance.get('/rest/game?chatId=' + _this.chatId)
+//                    .then((response) => {
+//                        _this.message = 'Текущее время: ' + response.data.gameDto.innerTime;
+//                        _this.map = JSON.parse(JSON.stringify(response.data.mapDto));
+//                        _this.rabbits = JSON.parse(JSON.stringify(response.data.rabbitDtoList));
+//                        _this.currentRabbit = _this.rabbits.filter((item) => {return item.clientId == _this.chatId})[0];
+//                        _this.checkTactic1 = _this.currentRabbit ? _this.currentRabbit.tacticId == 1 : false;
+//                    })
+//            }, 1000);
             setInterval(function () {
                 for (let i = 0; i < 10; i ++){
                     instance.get('/rest/littleMap?chatId=' + _this.chatId + "&cadr=" + i)
@@ -98,6 +104,13 @@
                 this.currentRabbit = this.rabbits.filter((item) => {return item.clientId == val})[0];
                 this.checkTactic1 = this.currentRabbit ? this.currentRabbit.tacticId == 1 : false;
                 console.log(this.currentRabbit);
+            },
+            gameData: function (val) {
+                this.message = 'Текущее время: ' + val.gameDto.innerTime;
+                this.map = val.mapDto;
+                this.rabbits = val.rabbitDtoList;
+                this.currentRabbit = this.rabbits.filter((item) => {return item.clientId == this.chatId})[0];
+                this.checkTactic1 = this.currentRabbit ? this.currentRabbit.tacticId == 1 : false;
             }
         },
         methods: {
