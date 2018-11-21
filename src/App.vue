@@ -79,7 +79,7 @@
         },
         created : function() {
             let _this = this;
-            this.socket = new SockJS("http://localhost:8090/gs-guide-websocket");
+            this.socket = new SockJS("http://" + config.config.serverHost + ":8090/gs-guide-websocket");
             this.stompClient = Stomp.over(this.socket);
             this.stompClient.connect({}, function (frame) {
                 _this.stompSubscribe = _this.stompClient.subscribe('/topic/' + _this.socketClientId, _this.receiveMessage);
@@ -157,7 +157,7 @@
             },
             connectSocket: function () {
                 let _this = this;
-                this.socket = new SockJS("http://localhost:8090/gs-guide-websocket");
+                this.socket = new SockJS("http://" + config.config.serverHost + "/gs-guide-websocket");
                 this.stompClient = Stomp.over(this.socket);
                 this.stompClient.connect({}, function (frame) {
                     console.log('Connected: ' + frame);
