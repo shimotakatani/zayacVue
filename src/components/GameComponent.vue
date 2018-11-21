@@ -19,7 +19,7 @@
                     </div>
                     <input type="checkbox" disabled hidden v-model="checkTactic1"/>
                     <button v-on:click="sendTactic()">Сменить тактику</button>
-                    <little-map :msg="littleMap" :capacity="capacity"></little-map>
+                    <little-map :msg="littleMapString" :capacity="capacity"></little-map>
                 </td>
                 <td valign="top">
                     <Map :map="map" :rabbits="rabbits" :chatId="chatId"></Map>
@@ -63,40 +63,17 @@
                 chatId: 0,
                 serverHost: config && config.config && config.config.serverHost ? config.config.serverHost : 'localhost',
                 littleMap: '',
-                mapCadrs: [],
-                capacity: 0
+                mapCadrs: []
             }
         },
         props: {
             userToken: '',
             gameData: {},
-            posts: []
+            posts: [],
+            littleMapString: '',
+            capacity: 0
         },
         created : function() {
-            let _this = this;
-//            setInterval(function () {
-//                instance.get('/rest/game?chatId=' + _this.chatId)
-//                    .then((response) => {
-//                        _this.message = 'Текущее время: ' + response.data.gameDto.innerTime;
-//                        _this.map = JSON.parse(JSON.stringify(response.data.mapDto));
-//                        _this.rabbits = JSON.parse(JSON.stringify(response.data.rabbitDtoList));
-//                        _this.currentRabbit = _this.rabbits.filter((item) => {return item.clientId == _this.chatId})[0];
-//                        _this.checkTactic1 = _this.currentRabbit ? _this.currentRabbit.tacticId == 1 : false;
-//                    })
-//            }, 1000);
-            setInterval(function () {
-                for (let i = 0; i < 10; i ++){
-                    instance.get('/rest/littleMap?chatId=' + _this.chatId + "&cadr=" + i)
-                        .then((response) => {
-                            _this.capacity = response.data.capacity;
-                            _this.mapCadrs[response.data.number] = response.data.mapString;
-                            if (!!response.data.finalCadr){
-                                _this.littleMap = _this.concatMap(_this.mapCadrs);
-                            }
-                        })
-                }
-
-            }, 1000);
         },
         watch: {
             chatId: function(val){
