@@ -19,7 +19,7 @@
                     </div>
                     <input type="checkbox" disabled hidden v-model="checkTactic1"/>
                     <button v-on:click="sendTactic()">Сменить тактику</button>
-                    <little-map :msg="littleMapString" :capacity="capacity"></little-map>
+                    <little-map :msg="littleMapString" :capacity="capacity" :clientRabbitIndex="currentRabbit.x ? currentRabbit.y * capacity + currentRabbit.x : -1"></little-map>
                 </td>
                 <td valign="top">
                     <Map :map="map" :rabbits="rabbits" :chatId="chatId"></Map>
