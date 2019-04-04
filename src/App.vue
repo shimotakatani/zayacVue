@@ -14,10 +14,14 @@
     </div>
     <div v-if="userToken.length == 0">
       <login-page v-on:setLogin = "setLogin" v-on:setPassword = "setPassword" v-on:getToken = "getToken" v-on:setToken = "setToken"></login-page>
+      <button v-on:click="openMapEditor">Открыть редактор карт</button>
       <div v-if="message && message.length">
         <span>{{message}}</span>
         <button class="errorMessage" data-tooltip="Удалить" @click="message = ''">х</button>
       </div>
+    </div>
+    <div v-if="openMap">
+      <map-editor :instance="instance"></map-editor>
     </div>
     <div v-if="userToken.length > 0">
       <game
@@ -39,17 +43,18 @@
     import Stomp from 'stompjs';
     import LoginPage from "./components/LoginPageVue";
     import Game from "./components/GameComponent.vue";
+    import MapEditor from "./components/MapEditor";
 
     let instance;
     if (config && config.config && config.config.serverHost) {
         instance  = axios.create({
             baseURL: 'http://' + config.config.serverHost + ':8090',
-            timeout: 1000
+            timeout: 60000
         });
     } else {
         instance  = axios.create({
             baseURL: 'http://localhost:8090',
-            timeout: 1000
+            timeout: 60000
         });
     }
 
@@ -74,7 +79,9 @@
                 gameData: {},
                 posts: [],
                 currentLittleMap: {},
-                cashMap: {}
+                cashMap: {},
+                openMap: false,
+                instance: instance
             }
         },
         created : function() {
@@ -95,6 +102,7 @@
         methods: {
             getToken: function () {
                 let _this = this;
+
                 instance.get(`/login?username=${_this.login}&password=${_this.password}`)
                     .then((response) => {
                         if (response && response.data && response.data.token){
@@ -191,9 +199,13 @@
                     }
                 }
                 return flag;
+            },
+            openMapEditor: function () {
+                this.openMap = true;
             }
         },
         components: {
+            MapEditor,
             LoginPage,
             Game
         }
